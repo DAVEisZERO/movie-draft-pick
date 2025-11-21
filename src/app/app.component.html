@@ -1,0 +1,19 @@
+<ion-app>
+    <ion-menu
+        side="start"
+        menuId="info-panel-left"
+        contentId="ion-router-outlet"
+        [disabled]="true"
+        (ionDidClose)="onPanelDismiss()">
+        <app-info-panel style="height: 100%"></app-info-panel>
+    </ion-menu>
+    <ion-menu
+        side="end"
+        menuId="info-panel-right"
+        contentId="ion-router-outlet"
+        [disabled]="true"
+        (ionDidClose)="onPanelDismiss()">
+        <app-info-panel style="height: 100%"></app-info-panel>
+    </ion-menu>
+    <ion-router-outlet id="ion-router-outlet"></ion-router-outlet>
+</ion-app>

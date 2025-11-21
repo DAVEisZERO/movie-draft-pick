@@ -1,0 +1,71 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title color="primary">Add movies</ion-title>
+        <ion-buttons slot="end">
+            <ion-button
+                (click)="dismiss()"
+                [disabled]="disableButton"
+                color="primary"
+                aria-label="Done"
+                title="Done"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="checkmark-circle"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-card>
+        <ion-card-content>
+            <table style="font-size: larger">
+                <thead style="font-size: larger">
+                    <td>Movie</td>
+                    <td style="padding-left: 1rem">Chance</td>
+                    <td style="padding-left: 1rem">Added by</td>
+                    <td style="padding-left: 1rem">Banned by</td>
+                </thead>
+                @for (film of trimmedList; track $index) {
+                    <tr style="color: var(--ion-color-dark)">
+                        <td>{{ film.title }}</td>
+                        <td style="padding-left: 1rem">{{ film.chance | percent: '1.2' }}</td>
+                        <td
+                            [ngStyle]="{ color: film.addedBy?.color ?? 'var(--ion-color-dark)' }"
+                            style="padding-left: 1rem">
+                            {{ film.addedBy?.name }}
+                        </td>
+                        <td
+                            [ngStyle]="{ color: film.selectedBy?.color ?? 'var(--ion-color-dark)' }"
+                            style="padding-left: 1rem">
+                            {{ film.selectedBy?.name }}
+                        </td>
+                    </tr>
+                }
+            </table>
+        </ion-card-content>
+    </ion-card>
+    <ion-grid>
+        <ion-row>
+            @for (selector of selectors; track $index) {
+                <ion-col size="3">
+                    <ion-select
+                        (ionChange)="addFilm(selector, $event.detail.value)"
+                        [ngStyle]="{ color: selector.color }"
+                        [label]="selector.name"
+                        [color]="selector.color"
+                        interface="modal"
+                        fill="solid">
+                        @for (film of availableFilms; track $index) {
+                            <ion-select-option [value]="film.position">{{
+                                film.title + ' (' + film.year + ')'
+                            }}</ion-select-option>
+                        }
+                    </ion-select>
+                </ion-col>
+            }
+        </ion-row>
+    </ion-grid>
+</ion-content>

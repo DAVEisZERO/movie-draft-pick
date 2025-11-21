@@ -1,0 +1,172 @@
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <ion-img src="/assets/icon/favicon.png"></ion-img>
+        <ion-text color="tertiary"
+          ><h1><strong>Sign up</strong></h1></ion-text
+        >
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <form [formGroup]="credentials">
+          <ion-list lines="none">
+            <ion-item>
+              <ion-input
+                helperText="Your email address"
+                errorText="Must be a valid email"
+                placeholder="..."
+                enterkeyhint="next"
+                formControlName="email"
+                inputmode="email"
+                type="email"
+              >
+                <ion-icon color="primary" name="mail" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                helperText="Your Full Name"
+                errorText="Must START with an Uppercase letter Followed by letters, spaces, hyphens, or apostrophes"
+                placeholder="..."
+                enterkeyhint="next"
+                formControlName="name"
+                inputmode="text"
+                type="text"
+              >
+                <ion-icon color="primary" name="person" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                [type]="showPassword() ? 'text' : 'password'"
+                helperText="Use a phrase like 'correct horse battery staple'"
+                errorText="Must be at least 8 characters long, contain at least 1 Uppercase, 1 Lowercase, 1 Number, and 1 Special Character. "
+                placeholder="..."
+                enterkeyhint="done"
+                formControlName="password"
+                inputmode="text"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+              >
+                <ion-icon color="primary" name="key" slot="start"></ion-icon>
+                <ion-button
+                  (click)="toggleShowPassword('password')"
+                  tabindex="-1"
+                  slot="end"
+                  fill="clear"
+                  shape="round"
+                >
+                  <ion-icon
+                    [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"
+                    slot="icon-only"
+                  ></ion-icon>
+                </ion-button>
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                (keyup.enter)="createAccount()"
+                [type]="showConfirmation() ? 'text' : 'password'"
+                helperText="Confirm your password"
+                errorText="Must match your password"
+                placeholder="..."
+                enterkeyhint="done"
+                formControlName="confirmation"
+                inputmode="text"
+              >
+                <ion-icon
+                  color="primary"
+                  name="lock-closed"
+                  slot="start"
+                ></ion-icon>
+                <ion-button
+                  (click)="toggleShowPassword('confirmation')"
+                  tabindex="-1"
+                  slot="end"
+                  fill="clear"
+                  shape="round"
+                >
+                  <ion-icon
+                    [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"
+                    slot="icon-only"
+                  ></ion-icon>
+                </ion-button>
+              </ion-input>
+            </ion-item>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <ion-button
+          (click)="createAccount()"
+          [disabled]="!credentials.valid || isLoading()"
+          expand="block"
+          color="secondary"
+        >
+          @if (!isLoading()) { Continue } @else {
+          <ion-spinner></ion-spinner>
+          }
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <p>
+          Already have an account?
+          <a (click)="navigateToLogin()" style="cursor: pointer"
+            ><u>Log in here</u></a
+          >
+        </p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-alert
+  (didDismiss)="alertData.set({open: false, email: ''})"
+  [isOpen]="alertData().open"
+  [buttons]="ALERT_BUTTONS"
+  [message]="`A message has been sent to ${alertData().email} with a confirmation link to validate your signup.`"
+  backdropDismiss="false"
+  header="Your account has been created!"
+></ion-alert>

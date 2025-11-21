@@ -1,0 +1,13 @@
+swiper-container {
+    width: 100%;
+    height: 100%;
+    --swiper-pagination-bullet-inactive-color: rgb(var(--ion-color-tertiary-rgb), 0.5);
+    --swiper-pagination-color: var(--ion-color-tertiary);
+}
+
+swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

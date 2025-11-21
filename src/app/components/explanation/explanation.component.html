@@ -1,0 +1,218 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title color="tertiary">How does this work?</ion-title>
+        <ion-buttons slot="end">
+            <ion-button
+                (click)="dismissModal()"
+                title="Close"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="close"
+                    slot="icon-only"
+                    color="tertiary">
+                </ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-grid class="ion-padding-start ion-padding-end">
+        <ion-row>
+            <ion-col>
+                <swiper-container
+                    [keyboard]="true"
+                    [pagination]="true"
+                    [spaceBetween]="32">
+                    <swiper-slide>
+                        <ion-text color="medium">
+                            <strong
+                                >By using the <b style="color: var(--ion-color-tertiary)">FART</b> selection
+                                process:</strong
+                            >
+                            <dl>
+                                <dt>
+                                    1.
+                                    <b style="color: var(--ion-color-tertiary)">F</b>etch the movies. Look for the link
+                                    <ion-icon name="link"></ion-icon>
+                                    icon.
+                                </dt>
+                                <dd
+                                    style="font-size: 100%"
+                                    class="ion-padding-bottom">
+                                    Create or use a public movie list on Letterboxd, for example
+                                    <a
+                                        href="https://letterboxd.com/lifeasfiction/list/letterboxd-100-animation/"
+                                        target="_blank"
+                                        >the 100 highest-rated animated movies</a
+                                    >. Copy the link to the list and submit it in this app.
+                                </dd>
+                                <dt>
+                                    2.
+                                    <b style="color: var(--ion-color-tertiary)">A</b>dd viewers. Look for the edit
+                                    <ion-icon name="create"></ion-icon>
+                                    icon.
+                                </dt>
+                                <dd
+                                    style="font-size: 100%"
+                                    class="ion-padding-bottom">
+                                    Add the people who will help you choose the movie. Each person gets a different
+                                    color so it's easy to see who's who.
+                                </dd>
+                                <dt>3. <b style="color: var(--ion-color-tertiary)">R</b>eview and ban movies.</dt>
+                                <dd
+                                    style="font-size: 100%"
+                                    class="ion-padding-bottom">
+                                    In rounds, have each person ban some movies they don't want to watch by clicking
+                                    their color and then the movie. The numbers next to the viewers' names indicate the
+                                    number of bans per viewer to ensure that there are at least three movies left, but
+                                    you can ban as many as you like.
+                                </dd>
+                                <dt>
+                                    4.
+                                    <b style="color: var(--ion-color-tertiary)">T</b>hen pick a winner. Look for the
+                                    dice
+                                    <ion-icon name="dice"></ion-icon>
+                                    icon.
+                                </dt>
+                                <dd
+                                    style="font-size: 100%"
+                                    class="ion-padding-bottom">
+                                    Assuming there is more than one movie left, choose the final movie from the
+                                    remaining options. The app itself doesn't have a way to pick the winner, but
+                                    suggests using an impartial method like spinning a roulette wheel.
+                                </dd>
+                                <p>Swipe to learn more!</p>
+                            </dl>
+                        </ion-text>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <ion-text color="medium">
+                            <strong>Why use the FART selection process for picking a movie?</strong>
+                            <p>
+                                Choosing a movie to watch with a group can often lead to disagreements and frustration.
+                                The FART selection process offers a unique and effective way to ensure everyone's voice
+                                is heard while making the selection process fun and fair. The main benefits are:
+                            </p>
+                            <ul>
+                                <li>
+                                    <b>Balanced Input:</b> each viewer has the power to veto movies they strongly
+                                    dislike, ensuring no one is stuck watching a movie they really don't want to see.
+                                </li>
+                                <li>
+                                    <b>Fair Elimination:</b> banning movies in rounds allows for a gradual narrowing
+                                    down of choices, giving everyone a chance to influence the decision multiple times.
+                                </li>
+                                <li>
+                                    <b>Interactive and Fun:</b> the process is engaging and can be more enjoyable than
+                                    simply voting or being told what to watch.
+                                </li>
+                                <li>
+                                    <b>Final Choice Variety:</b> ensures a minimum of three movies remain, providing
+                                    options and preventing a single dominant choice.
+                                </li>
+                                <li>
+                                    <b>Creative Final Decision:</b> the suggestion to use a random method like a
+                                    roulette adds an element of surprise and excitement to the final selection.
+                                </li>
+                            </ul>
+                            <p>
+                                Unlike democratic votes or authoritarian decisions, this method ensures that everyone's
+                                preferences are considered, reduces the chance of dissatisfaction, and makes the
+                                movie-picking process an enjoyable part of the group activity.
+                            </p>
+                        </ion-text>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <ion-text color="medium">
+                            <strong>The birth of the FART selection process</strong>
+                            <p>
+                                Once upon a time, in a bustling city, there was a close-knit group of friends who loved
+                                to watch movies together. This group, known as the "Film Buffs", had a tradition of
+                                gathering every Friday night for a movie marathon. However, what should have been a fun
+                                and relaxing event often turned into a source of tension and frustration.
+                            </p>
+                            <p>
+                                Each week, the Film Buffs faced the same problem: deciding which movie to watch. They
+                                tried different methods, but none seemed to work. When they voted democratically, the
+                                same genres or directors always won, leaving some members feeling left out. On the rare
+                                occasions when they let one person decide, it caused resentment and complaints from the
+                                rest. They needed a better way.
+                            </p>
+                            <p>
+                                One particularly heated Friday night, after yet another argument over which movie to
+                                watch, a member named Billy had a lightbulb moment. Billy, a software developer by
+                                profession, realized that their problem wasn't unique and that technology might offer a
+                                solution. Over the weekend, Billy started working on a new system, something that would
+                                be fair and inclusive but also fun.
+                            </p>
+                            <p>
+                                Billy called the new system the <b>"Fair and Random Tiebreaker"</b>, or <b>FART</b> for
+                                short. The idea was simple but ingenious.
+                            </p>
+                        </ion-text>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <ion-text color="medium">
+                            <ol>
+                                <li>
+                                    Users would start by creating or selecting a movie list on Letterboxd, a popular
+                                    film database. This way, everyone could see the options and add their suggestions.
+                                </li>
+                                <li>
+                                    Each person involved in the movie night would be added as a viewer in the FART app.
+                                    They would each be assigned a different color to represent their choices, making the
+                                    process visually engaging.
+                                </li>
+                                <li>
+                                    Instead of voting directly for their favorites, viewers would take turns banning
+                                    movies they didn't want to watch. This would be done in rounds, ensuring everyone
+                                    had a chance to veto a few choices without eliminating all the options too quickly.
+                                </li>
+                                <li>
+                                    After several rounds, they would be left with a few remaining movies. The final step
+                                    would involve selecting the winner using a fun, random method like a roulette wheel,
+                                    adding an element of surprise and excitement to the decision.
+                                </li>
+                            </ol>
+                        </ion-text>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <ion-text color="medium">
+                            <p>
+                                Billy presented the FART process to the Film Buffs the next Friday. At first, there were
+                                giggles about the name, but everyone agreed to give it a try. They created a list of
+                                movies on Letterboxd, added each member as a viewer, and started the banning process.
+                                What happened next was nothing short of magical.
+                            </p>
+                            <p>
+                                For the first time, everyone felt involved and respected in the decision-making process.
+                                The rounds of banning movies turned into a fun game, with laughter and light-hearted
+                                banter replacing the usual arguments. When it came time to pick the final movie using
+                                the roulette, the group held their breath in anticipation, and the excitement made the
+                                viewing experience even better.
+                            </p>
+                            <p>
+                                Word of the FART process spread quickly. Other friend groups, families, and even clubs
+                                started adopting the method for their movie nights. What began as a solution to the Film
+                                Buffs' Friday night dilemma turned into a popular way for people everywhere to pick
+                                movies fairly and enjoyably.
+                            </p>
+                            <p>
+                                Billy, seeing how well the FART process worked, developed it into a full-fledged app,
+                                making it easier for anyone to use. The Film Buffs continued their tradition, now with a
+                                system that guaranteed everyone had a voice, and their movie nights became more
+                                enjoyable than ever.
+                            </p>
+                            <p>
+                                And so, the FART selection process was born out of a need for fairness and fun,
+                                transforming movie nights and ensuring that everyone had a say in the cinematic
+                                adventures they embarked on together.
+                            </p>
+                        </ion-text>
+                    </swiper-slide>
+                </swiper-container>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

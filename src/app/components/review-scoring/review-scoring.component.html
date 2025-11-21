@@ -1,0 +1,53 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title color="primary">Rate the movie</ion-title>
+        <ion-buttons slot="end">
+            <ion-button
+                (click)="exportListData()"
+                id="open-final-score-alert"
+                [disabled]="!reviewForm.valid"
+                color="primary"
+                aria-label="Finish"
+                title="Finish"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="checkmark-circle"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <form [formGroup]="reviewForm">
+                    <ion-list formArrayName="scores">
+                        @for (control of scoresControl.controls; track $index) {
+                            <ion-input
+                                (ionChange)="changeScore($index, $event)"
+                                [formControlName]="$index"
+                                [ngStyle]="{ color: review.reviewers[$index].color }"
+                                [label]="review.reviewers[$index].name + ':'"
+                                [color]="review.reviewers[$index].color"
+                                type="number"
+                                fill="solid"
+                                [placeholder]="placeholders[$index]"
+                                max="5"
+                                min="0"
+                                step="0.1">
+                            </ion-input>
+                        }
+                    </ion-list>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-alert
+        trigger="open-final-score-alert"
+        [header]="alertTitle"
+        [message]="alertMessage">
+    </ion-alert>
+</ion-content>

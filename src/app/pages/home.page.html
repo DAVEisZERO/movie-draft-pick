@@ -1,0 +1,493 @@
+<ion-header class="header-text">
+    <ion-toolbar>
+        <ion-buttons
+            id="open-edit-selectors-modal"
+            slot="start"
+            class="ion-padding header-actions">
+            <ion-button
+                color="primary"
+                [attr.title]="getButtonAccessibility('Edit viewers').title"
+                [attr.aria-label]="getButtonAccessibility('Edit viewers')['aria-label']"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="create"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+            @if (selectors.length < 1) {
+            <ion-text color="primary">Add viewers</ion-text>
+            } @if (currentRoundNumber && totalRoundsCount) {
+            <ion-text
+                color="primary"
+                class="round-number"
+                >Round {{currentRoundNumber}}/{{totalRoundsCount}}:</ion-text
+            >
+            }
+        </ion-buttons>
+
+        @if (selectors.length > 0) {
+        <ion-list class="small-screen">
+            <ion-chip
+                class="header-text small-screen"
+                [ngStyle]="{'--background': (activeSelector || latestSelector)?.color, '--color': (activeSelector || latestSelector)?.contrast}"
+                [outline]="!activeSelector && !latestSelector">
+                @if (activeSelector || latestSelector) {
+                <ion-text>{{(activeSelector || latestSelector)?.name}}</ion-text>
+                @if (currentRoundNumber) {
+                <ion-text
+                    >&nbsp;({{(activeSelector ||
+                    latestSelector)?.getSelectionsMadeForRound(currentRoundNumber)}}/{{(activeSelector ||
+                    latestSelector)?.getTotalSelectionsForRound(currentRoundNumber)}})</ion-text
+                >
+                } }
+            </ion-chip>
+        </ion-list>
+        <ion-list class="selector-list big-screen">
+            @for (selector of selectors; track $index) {
+            <ion-chip
+                class="header-text selector-chip"
+                [ngStyle]="{'--background': selector.color, '--color': selector.equals(activeSelector) ? selector.contrast : selector.color}"
+                [outline]="!selector.equals(activeSelector)"
+                (mouseenter)="highlightSelectorSelections(selector)"
+                (mouseleave)="clearHighlights()">
+                {{selector.name}}&nbsp;@if (currentRoundNumber) {
+                <ion-text
+                    >({{selector.getSelectionsMadeForRound(currentRoundNumber)}}/{{selector.getTotalSelectionsForRound(currentRoundNumber)}})</ion-text
+                >
+                }
+            </ion-chip>
+            }
+        </ion-list>
+        } @if (filmList.entries.length > 0) {
+        <ion-buttons slot="end">
+            <ion-button
+                (click)="undoLastSelection()"
+                [disabled]="filmList.currentOrder === 0"
+                color="primary"
+                aria-label="Undo last selection"
+                title="Undo last selection"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="arrow-undo"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+            <ion-button
+                id="open-reset-list-alert"
+                [disabled]="filmList.currentOrder === 0"
+                color="primary"
+                aria-label="Reset list"
+                title="Reset list"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="trash"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+            <ion-button
+                id="open-update-list-alert"
+                [disabled]="!lastValidUrl"
+                color="primary"
+                aria-label="Update list"
+                title="Update list"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="reload"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+            @if (isNotProd) {
+            <ion-button
+                (click)="simulateDraft()"
+                color="warning"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="flask"
+                    slot="icon-only">
+                </ion-icon>
+            </ion-button>
+            }
+        </ion-buttons>
+        }
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    @if (filmList.entries.length < 1) {
+    <div class="ion-text-center">
+        <ion-text color="medium">
+            <h2>No movies loaded</h2>
+            <p>Click the bottom right button to select a Letterboxd list</p>
+        </ion-text>
+    </div>
+    } @if (filmList.entries.length > 0) {
+    <ion-grid
+        [class.draft-complete]="isDraftComplete"
+        [class.highlighting-selector]="highlightedSelector">
+        <ion-row>
+            @for (entry of filmList.entries; track $index) {
+            <ion-col
+                sizeXl="1"
+                sizeLg="1.2"
+                sizeMd="1.5"
+                sizeSm="2"
+                sizeXs="3">
+                <div
+                    class="container"
+                    (click)="handleGridToggle(entry, $event)"
+                    [attr.title]="getFilmAccessibility(entry).title"
+                    [attr.aria-label]="getFilmAccessibility(entry)['aria-label']"
+                    [ngStyle]="{
+                        'outline-color': entry.selector?.color,
+                        'color': entry.selector?.color,
+                        '--stripe-color': entry.selector?.color
+                    }"
+                    [ngClass]="{
+                        'selected': entry.selected,
+                        'default-disabled': entry.disabled,
+                        'highlight-selection': highlightedSelector?.equals(entry.selector)
+                    }">
+                    <ion-img
+                        [src]="entry.posterUrl"
+                        [alt]="entry.title + ' poster'">
+                    </ion-img>
+
+                    @if (entry.selected) {
+                    <ion-badge
+                        class="top-right"
+                        [ngStyle]="{
+                            'background': entry.selector?.color,
+                            '--color': entry.selector?.contrast
+                        }">
+                        {{entry.globalOrder}}
+                    </ion-badge>
+                    }
+                    <div
+                        class="hover-grid"
+                        [class.active]="activeGridId === entry.urlSlug">
+                        <div
+                            class="hover-grid-container"
+                            [class.selected]="entry.selected">
+                            <div
+                                class="hover-grid-item"
+                                (click)="handleGridAction('navigate', entry)"
+                                aria-label="Open on Letterboxd"
+                                title="Open on Letterboxd">
+                                <ion-icon
+                                    name="open"
+                                    size="large">
+                                </ion-icon>
+                            </div>
+                            @if (!entry.selected) {
+                            <div
+                                class="hover-grid-item"
+                                [class.disabled]="(!activeSelector && entry.globalOrder !== filmList.currentOrder) || entry.disabled"
+                                (click)="handleGridAction('select', entry)"
+                                [attr.aria-label]="activeSelector ? 'Ban' : 'Add a viewer first'"
+                                [title]="activeSelector ? 'Ban' : 'Add a viewer first'">
+                                <ion-icon
+                                    name="ban"
+                                    size="large">
+                                </ion-icon>
+                            </div>
+                            }
+                            <div
+                                class="hover-grid-item"
+                                (click)="handleGridAction('info', entry, $event)"
+                                aria-label="Show movie details"
+                                title="Show movie details">
+                                <ion-icon
+                                    name="information-circle"
+                                    size="large">
+                                </ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ion-col>
+            }
+        </ion-row>
+    </ion-grid>
+
+    @if (isDraftComplete) {
+    <div class="draft-complete-overlay"></div>
+    <div class="final-choices">
+        <ion-grid>
+            <ion-row>
+                @for (entry of filmList.entries; track $index) { @if (!entry.selected && !entry.disabled) {
+                <ion-col
+                    size="12"
+                    size-sm="6"
+                    size-md="4"
+                    size-lg="3"
+                    size-xl="2">
+                    <div
+                        class="container"
+                        (click)="handleGridToggle(entry, $event)">
+                        <ion-img
+                            [src]="entry.posterUrl"
+                            [alt]="entry.title + ' poster'"></ion-img>
+
+                        <div
+                            class="hover-grid"
+                            [class.active]="activeGridId === entry.urlSlug">
+                            <div class="hover-grid-container">
+                                <div
+                                    class="hover-grid-item"
+                                    (click)="handleGridAction('navigate', entry)"
+                                    aria-label="Open on Letterboxd"
+                                    title="Open on Letterboxd">
+                                    <ion-icon
+                                        name="open"
+                                        size="large">
+                                    </ion-icon>
+                                </div>
+                                <div
+                                    class="hover-grid-item"
+                                    (click)="handleGridAction('review', entry)"
+                                    aria-label="Select for review"
+                                    title="Select for review">
+                                    <ion-icon
+                                        name="checkmark-circle"
+                                        size="large">
+                                    </ion-icon>
+                                </div>
+                                <div
+                                    class="hover-grid-item"
+                                    (click)="handleGridAction('info', entry, $event)"
+                                    aria-label="Show movie details"
+                                    title="Show movie details">
+                                    <ion-icon
+                                        name="information-circle"
+                                        size="large">
+                                    </ion-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-col>
+                } }
+            </ion-row>
+        </ion-grid>
+    </div>
+    } } @if (draft) {
+    <div class="status-bar">
+        <div class="info-container">
+            @if (isDraftComplete){
+            <ion-button
+                class="corner-button left"
+                (click)="copyRemainingTitles()"
+                color="primary"
+                fill="solid"
+                shape="round"
+                title="Copy titles and open roulette">
+                <ion-icon name="dice"></ion-icon>
+                <ion-label>Copy titles and open roulette</ion-label>
+            </ion-button>
+            <ion-button
+                class="corner-button right"
+                (click)="exportListData()"
+                color="primary"
+                fill="solid"
+                shape="round"
+                title="Download list as CSV">
+                <ion-icon name="download"></ion-icon>
+                <ion-label>Download list as CSV</ion-label>
+            </ion-button>
+            <div class="counters">
+                <ion-text color="primary">
+                    <strong>
+                        <h2>Draft complete!</h2>
+                    </strong>
+                </ion-text>
+            </div>
+            <ion-text color="dark"
+                >After <b>{{draft.selectionsMade}}</b> bans, these are the
+                <b>{{draft.remainingSelections}}</b> remaining movies from a total of
+                <b>{{draft.totalEntries}}</b></ion-text
+            >} @else {
+            <div class="counters">
+                <ion-text color="primary">
+                    <strong>
+                        <h2>Bans: {{draft.selectionsMade}}/{{draft.availableSelections}}</h2>
+                    </strong>
+                </ion-text>
+            </div>
+            <ion-text color="dark">
+                {{draft.remainingSelections}} movies out of {{draft.totalEntries}} total will remain for final
+                choice</ion-text
+            >}
+        </div>
+    </div>
+    }
+
+    <ion-fab
+        slot="fixed"
+        vertical="bottom"
+        horizontal="start">
+        <ion-fab-button
+            (click)="openExplanationModal()"
+            color="secondary"
+            size="small"
+            title="Help">
+            <ion-icon name="help"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button
+            (click)="openSettingsModal()"
+            color="secondary"
+            size="small"
+            title="Settings">
+            <ion-icon name="settings"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab
+        slot="fixed"
+        vertical="bottom"
+        horizontal="end">
+        @if (filmList && filmList.entries.length > 0) {
+        <ion-fab-button
+            title="Actions"
+            color="secondary">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button
+                (click)="exportListData()"
+                color="secondary">
+                <ion-label>Download list as CSV</ion-label>
+                <ion-icon name="download"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button
+                (click)="copyRemainingTitles()"
+                color="secondary">
+                <ion-label>Copy unselected titles and open roulette</ion-label>
+                <ion-icon name="dice"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button
+                (click)="navigateToSourceList()"
+                color="secondary">
+                <ion-label>Open list on Letterboxd</ion-label>
+                <ion-icon name="open"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button
+                (click)="openUrlInputModal()"
+                color="secondary">
+                <ion-label>Choose a different list</ion-label>
+                <ion-icon name="link"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+        } @else {
+        <ion-fab-button
+            (click)="openUrlInputModal()"
+            title="Select a list">
+            <ion-icon name="link"></ion-icon>
+        </ion-fab-button>
+        }
+    </ion-fab>
+    <ion-modal
+        #modal
+        trigger="open-edit-selectors-modal">
+        <ng-template>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-button
+                            title="Close"
+                            (click)="dismissModal()"
+                            fill="clear"
+                            shape="round">
+                            <ion-icon
+                                color="primary"
+                                name="close"
+                                slot="icon-only">
+                            </ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                    @if (selectors.length < 1) {
+                    <ion-title color="primary">Edit viewers</ion-title>
+                    } @if (selectors.length > 0) {
+                    <ion-title color="primary"
+                        >{{selectors.length}} viewer{{selectors.length > 1 ? 's' : ''}}</ion-title
+                    >
+                    }
+                    <ion-buttons slot="end">
+                        <ion-button
+                            id="open-reset-selectors-alert"
+                            [disabled]="selectors.length === 0"
+                            color="primary"
+                            aria-label="Remove all viewers"
+                            title="Remove all viewers"
+                            fill="clear"
+                            shape="round">
+                            <ion-icon
+                                name="trash"
+                                slot="icon-only">
+                            </ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col>
+                            <ion-list>
+                                @for (option of colorOptions; track $index) {
+                                <ion-input
+                                    maxlength="15"
+                                    (ionInput)="onInput($event, option.value)"
+                                    [ngStyle]="{'color': option.value}"
+                                    [placeholder]="option.placeholder"
+                                    [value]="option.selectorName"
+                                    clearInput="true"
+                                    clear-input-icon="trash"
+                                    fill="solid">
+                                    <ion-icon
+                                        [ngStyle]="{'color': option.value}"
+                                        name="color-palette"
+                                        slot="start">
+                                    </ion-icon>
+                                </ion-input>
+                                }
+                            </ion-list>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-content>
+            <ion-alert
+                (willDismiss)="removeAllSelectors($event.detail.role)"
+                trigger="open-reset-selectors-alert"
+                header="Remove viewers"
+                message="Are you sure you want to remove all viewers? This will also remove all bans and cannot be undone. It will not remove any movies."
+                [buttons]="standardAlertButtons">
+            </ion-alert>
+        </ng-template>
+    </ion-modal>
+    @if (filmList && filmList.entries.length > 0) {
+    <ion-alert
+        (willDismiss)="resetList($event.detail.role)"
+        trigger="open-reset-list-alert"
+        header="Reset list"
+        message="Are you sure you want to reset the list? This cannot be undone. It will not remove any viewers or movies."
+        [buttons]="standardAlertButtons">
+    </ion-alert>
+    <ion-alert
+        (willDismiss)="updateList($event.detail.role)"
+        trigger="open-update-list-alert"
+        header="Update list"
+        message="This will reset the bans and may take a minute, are you sure you want to continue?"
+        [buttons]="standardAlertButtons">
+    </ion-alert>
+    } @if (isLoading) {
+    <ion-loading
+        [isOpen]="true"
+        message="Loading movie list, this may take a minute..."
+        spinner="circular">
+    </ion-loading>
+    }
+</ion-content>

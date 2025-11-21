@@ -1,0 +1,7 @@
+{
+    "name": "movie-draft-pick",
+    "integrations": {
+        "capacitor": {}
+    },
+    "type": "angular-standalone"
+}

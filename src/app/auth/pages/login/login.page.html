@@ -1,0 +1,155 @@
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <ion-img src="/assets/icon/favicon.png"></ion-img>
+        <ion-text color="tertiary"
+          ><h1><strong>Log in</strong></h1></ion-text
+        >
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <form [formGroup]="credentials">
+          <ion-list lines="none">
+            <ion-item>
+              <ion-input
+                errorText="Invalid email"
+                placeholder="Email"
+                enterkeyhint="next"
+                formControlName="email"
+                inputmode="email"
+                type="email"
+              >
+                <ion-icon color="primary" name="mail" slot="start"></ion-icon>
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                (keyup.enter)="login()"
+                [type]="showPassword() ? 'text' : 'password'"
+                errorText="Invalid password"
+                placeholder="Password"
+                enterkeyhint="done"
+                formControlName="password"
+                inputmode="text"
+              >
+                <ion-icon color="primary" name="key" slot="start"></ion-icon>
+                <ion-button
+                  (click)="toggleShowPassword()"
+                  slot="end"
+                  fill="clear"
+                  shape="round"
+                >
+                  <ion-icon
+                    [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"
+                    slot="icon-only"
+                  ></ion-icon>
+                </ion-button>
+              </ion-input>
+            </ion-item>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        class="ion-text-end"
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <ion-button
+          (click)="login()"
+          [disabled]="isLoading()"
+          expand="block"
+          color="secondary"
+        >
+          @if (!isLoading()) { Continue } @else {
+          <ion-spinner></ion-spinner>
+          }
+        </ion-button>
+        <ion-button
+          id="reset-password-modal-trigger"
+          color="secondary"
+          fill="clear"
+          size="small"
+        >
+          Forgot your password?
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <div class="divider">
+          <span>Don't have an account?</span>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        offset-lg="3"
+        offset-md="2"
+        offset-sm="1"
+        offset-xl="4"
+        size-lg="6"
+        size-md="8"
+        size-sm="10"
+        size-xl="4"
+      >
+        <ion-button
+          (click)="navigateToAuth('signup')"
+          expand="block"
+          color="secondary"
+          >Sign up</ion-button
+        >
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-modal
+  (didDismiss)="resetModalInputs()"
+  trigger="reset-password-modal-trigger"
+  cssClass="reset-password-modal"
+  backdropDismiss="false"
+>
+  <ng-template>
+    <app-password-reset
+      (confirm)="sendPasswordResetEmail($event)"
+      [initialAddress]="email.value"
+      [emailStatus]="resetPasswordEmailStatus()"
+    ></app-password-reset>
+  </ng-template>
+</ion-modal>

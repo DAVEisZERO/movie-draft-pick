@@ -1,0 +1,151 @@
+@if (filmEntry) {
+    <ion-content>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <div
+                        [title]="filmEntry.title + ' (' + filmEntry.year + ')'"
+                        [ngStyle]="{ 'outline-color': filmEntry.selector?.color, color: filmEntry.selector?.color }"
+                        [ngClass]="{
+                            selected: filmEntry.selected,
+                            disabled: filmEntry.disabled,
+                        }"
+                        class="container">
+                        <ion-img
+                            (ionImgDidLoad)="posterLoaded = true"
+                            [src]="filmEntry.highResPosterUrl">
+                        </ion-img>
+                        @if (filmEntry.selected) {
+                            <ion-badge
+                                class="top-right"
+                                [ngStyle]="{
+                                    background: filmEntry.selector?.color,
+                                    '--color': filmEntry.selector?.contrast,
+                                }">
+                                {{ filmEntry.globalOrder }}
+                            </ion-badge>
+                        }
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row
+                class="ion-padding"
+                style="flex-direction: column">
+                @if (filmEntry.title && filmEntry.year) {
+                    <div style="justify-content: space-between; display: flex">
+                        <ion-text style="font-weight: bold">{{ filmEntry.title }} ({{ filmEntry.year }})</ion-text>
+                        @if (filmEntry.urlSlug) {
+                            <ion-icon
+                                title="Open movie in Letterboxd"
+                                name="open-outline"
+                                color="primary"
+                                (click)="navigateToFilmUrl()">
+                            </ion-icon>
+                        }
+                    </div>
+                }
+                @if (filmEntry.originalTitle) {
+                    <ion-text color="medium">{{ filmEntry.originalTitle }}</ion-text>
+                }
+            </ion-row>
+            <ion-row class="ion-padding">
+                @if (filmEntry.tagline) {
+                    <ion-text style="font-weight: bold">{{ filmEntry.tagline }}</ion-text>
+                }
+                @if (filmEntry.summary) {
+                    <ion-text color="medium">{{ filmEntry.summary }}</ion-text>
+                }
+            </ion-row>
+            <ion-row
+                class="ion-padding"
+                style="flex-direction: column">
+                @if (filmEntry.durationString) {
+                    <div>
+                        <ion-text style="font-weight: bold">Duration: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.durationString }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.genreString) {
+                    <div>
+                        <ion-text style="font-weight: bold">Genre: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.genreString }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.originCountry) {
+                    <div>
+                        <ion-text style="font-weight: bold">Origin country: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.originCountry }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.directorsString) {
+                    <div>
+                        <ion-text style="font-weight: bold">Director: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.directorsString }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.soundtrackString) {
+                    <div>
+                        <ion-text style="font-weight: bold">Soundtrack: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.soundtrackString }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.leadRolesString) {
+                    <div>
+                        <ion-text style="font-weight: bold">Lead role: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.leadRolesString }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.budget) {
+                    <div>
+                        <ion-text style="font-weight: bold">Budget: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.budget | currency: 'USD' : 'symbol' : '0.0' }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.revenue) {
+                    <div>
+                        <ion-text style="font-weight: bold">Revenue: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.revenue | currency: 'USD' : 'symbol' : '0.0' }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.ratingString) {
+                    <div>
+                        <ion-text style="font-weight: bold">TMDB Rating: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.ratingString | number: '1.1-1' }}</ion-text>
+                    </div>
+                }
+            </ion-row>
+            @if (filmEntry.translations && filmEntry.translations.length > 0) {
+                <ion-row
+                    class="ion-padding"
+                    style="flex-direction: column">
+                    <ion-text style="font-weight: bold">Spanish translation</ion-text>
+                    @for (translation of filmEntry.translations; track $index) {
+                        <div>
+                            <ion-text style="font-weight: bold">{{ translation.country }}: </ion-text>
+                            <ion-text color="medium">{{ translation.title | titlecase }}</ion-text>
+                        </div>
+                    }
+                </ion-row>
+            }
+            <ion-row
+                class="ion-padding"
+                style="flex-direction: column">
+                @if (filmEntry.suggestedBy) {
+                    <div>
+                        <ion-text style="font-weight: bold">Suggested by: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.suggestedBy | titlecase }}</ion-text>
+                    </div>
+                }
+                @if (filmEntry.selector) {
+                    <div>
+                        <ion-text style="font-weight: bold">Banned by: </ion-text>
+                        <ion-text color="medium">{{ filmEntry.selector.name | titlecase }}</ion-text>
+                    </div>
+                }
+            </ion-row>
+        </ion-grid>
+    </ion-content>
+}
+@if (!filmEntry || !posterLoaded) {
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+}

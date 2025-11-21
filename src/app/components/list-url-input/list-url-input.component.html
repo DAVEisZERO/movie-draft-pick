@@ -1,0 +1,97 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title color="secondary">Enter the link to a Letterboxd list</ion-title>
+        <ion-buttons slot="end">
+            <ion-button
+                (click)="dismissModal()"
+                title="Close"
+                fill="clear"
+                shape="round">
+                <ion-icon
+                    name="close"
+                    slot="icon-only"
+                    color="secondary">
+                </ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-grid class="ion-padding">
+        <ion-row>
+            <ion-col>
+                <form [formGroup]="formGroup">
+                    <ion-input
+                        #input
+                        (keyup.enter)="submit()"
+                        autocomplete="url"
+                        formControlName="inputUrl"
+                        enterkeyhint="go"
+                        inputmode="url"
+                        errorText="Link should point to a Letterboxd list"
+                        placeholder="https://letterboxd.com/user/list/title"
+                        type="url"
+                        fill="solid">
+                        <ion-icon
+                            name="link"
+                            slot="start"
+                            color="secondary">
+                        </ion-icon>
+                        <ion-buttons slot="end">
+                            <ion-button
+                                (click)="submit()"
+                                [disabled]="formGroup.invalid"
+                                title="Submit"
+                                fill="clear"
+                                shape="round">
+                                <ion-icon
+                                    name="arrow-forward"
+                                    slot="icon-only"
+                                    color="secondary">
+                                </ion-icon>
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-input>
+                </form>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-text color="medium">
+                    <strong>Loading a list may take a minute.</strong>
+                    <p>
+                        Letterboxd does not currently provide a public way to retrieve data from its platform. What this
+                        page does is
+                        <a
+                            href="https://en.wikipedia.org/wiki/Web_scraping"
+                            target="_blank"
+                            >web scraping</a
+                        >, which is significantly slower than a public API.
+                    </p>
+                    <p>
+                        As a result, the server processing the requested list has to open it in a browser, wait for the
+                        page to fully load, extract the data programmatically, and then send it back. In an optimal
+                        environment, this loads ~10 movies per second.
+                    </p>
+                    <p>
+                        Unfortunately, the server doing this web scraping has very limited processing power because it
+                        is hosted on a free service, so this is far from an optimal environment. Expect it to take about
+                        a minute.
+                    </p>
+                    <p>
+                        Fortunately, once the list is loaded, it will remain cached and will not need to be retrieved
+                        again unless you explicitly request an update to reflect any remote changes to the list.
+                        Everything else
+                        <em>should</em>
+                        run smoothly without any further delays or issues.
+                    </p>
+                    <p>
+                        <b>Note:</b>
+                        only the first 100 entries in the list will be fetched, as only the first page of the list is
+                        scraped.
+                    </p>
+                </ion-text>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
