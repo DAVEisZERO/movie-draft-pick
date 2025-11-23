@@ -1,18 +1,45 @@
 # Movie Draft Pick
 
-A web application for conducting movie draft picks with friends. Import movie lists from platforms like Letterboxd and conduct fair drafts to decide what to watch together.
+## 📋 Description
 
-## 📋 Prerequisites
+This project entails a A friendly Ionic/Angular web application to conduct movie draft picks with friends. Import Letterboxd lists and run fair drafts to decide what to watch together. The app mus be used in conjuction with a backend service for aaccoutn management providing basic account features (authentication/authorization). Per default, the [Simple Redis IAM](https://github.com/DAVEisZERO/simple-redis-iam) backend service is already configured to perfectly work with this draft pick app.
 
-Before you can run this application, you need to have Node.js installed on your system.
+"Movie Draft Pick" helps groups fairly decide movies to watch by importing friends' Letterboxd lists and running draft rounds. The repository also intentionally includes optional insecure features so developers can learn about [OWASP Top 10 (2021)](https://owasp.org/Top10/A00_2021_Introduction/) issues in a controlled environment.
 
-### Installing Node.js
+Badges: ![License](https://img.shields.io/badge/license-MIT-blue) ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 
-#### Option 1: Using NVM (Recommended)
+---
 
-NVM (Node Version Manager) allows you to easily install and switch between different Node.js versions.
+## Table of contents
 
-**On Linux/macOS:**
+---
+
+## 🎯 Goal
+
+Provide a functional, user friendly web application to draft out films in a typical "movie nights" context with your dear ones. Resolving disputes/conflcits about what to watch and making the selectio process mroe efficient. Cause you know, "time is gold".
+In addtion, This application demonstrates both secure and intentionally vulnerable code patterns to educate developers about common security pitfalls in realation to OWASP Top 10 web app vulnerbailities (e.g., A06, A08).
+
+---
+
+## 📦 Prerequisites
+
+- Node.js (v18 LTS or later)
+    - npm (v9 or later)
+    - Optional: Ionic CLI for a better developer experience
+- Create a TMDB API Key
+
+### Install Node.js (recommended: NVM)
+
+Windows (nvm-windows)
+
+```cmd
+# Download & install nvm-windows from:
+# https://github.com/coreybutler/nvm-windows/releases
+nvm install lts
+nvm use lts
+```
+
+Linux/macOS
 
 ```bash
 # Install NVM
@@ -26,22 +53,11 @@ nvm install --lts
 nvm use --lts
 ```
 
-**On Windows:**
-
-1. Download and install [nvm-windows](https://github.com/coreybutler/nvm-windows/releases)
-2. Open a new command prompt as Administrator
-3. Run:
-
-```cmd
-nvm install lts
-nvm use lts
-```
-
-#### Option 2: Direct Installation
+##### Direct Installation
 
 Visit [nodejs.org](https://nodejs.org/) and download the LTS (Long Term Support) version for your operating system.
 
-### Verify Installation
+#### Verify Installation
 
 Check that Node.js and npm are properly installed:
 
@@ -50,7 +66,33 @@ node --version  # Should show v18.x.x or higher
 npm --version   # Should show 9.x.x or higher
 ```
 
-## 🚀 Getting Started
+#### Ionic CLI
+
+To install the Ionic CLI, run:
+
+```bash
+npm install -g @ionic/cli
+```
+
+The Ionic CLI provides additional development tools and commands.
+
+### TMDb API key
+
+1. Create an account at [themoviedb.org](https://www.themoviedb.org/)
+2. Go to Settings → API
+3. Request an API key
+4. Copy the "API Read Access Token" to the `tmdbToken` field in your environment file
+
+## 🔧 Build and Deploy
+
+There are two deployment approaches, highlighting the importance of respecting **A06** and **A08** OWASP vulnerabilities:
+
+- **A06:2021** – Vulnerable and Outdated Components
+- **A08:2021** – Software and Data Integrity Failures
+
+---
+
+## 🔒 Secure Deployment
 
 ### 1. Clone the Repository
 
@@ -59,25 +101,44 @@ git clone https://github.com/strucio/movie-draft-pick.git
 cd movie-draft-pick
 ```
 
-### 2. Install Dependencies
+### 2. Check for Outdated Components
 
 ```bash
-npm install
+npm outdated
 ```
+
+- Red: Matches your version requirements (safe to update).
+
+- Yellow: A newer major version exists (breaking changes).
 
 This will install all the required packages including Angular, Ionic, and other dependencies.
 
-### 3. Install Ionic CLI (Optional but Recommended)
+### 3. Security Gate
 
 ```bash
-npm install -g @ionic/cli
+npm audit
+npm audit fix #Automatically updates minor versions to patch holes.
 ```
 
-The Ionic CLI provides additional development tools and commands.
+update what you need/prefer based on audit and security scans
 
-## 🏃‍♂️ Running the Application
+```bash
+npm update <dependency>
+```
 
-### Development Server
+### 4. Install dependencies
+
+Secure. (Clean Install). Fails if lockfile and package.json disagree.
+
+```bash
+npm ci --ignore-scripts # Reads only package-lock.json. Deletes node_modules first. Verifies Hashes.
+```
+
+1. INTEGRITY: Use 'npm ci' (Clean Install) instead of 'npm install'
+2. SECURITY: Prevent malicious post-install scripts
+    - Preventing Script Injection (A08) -> ignore-scripts flag
+
+### 5. Running the Application
 
 To start the development server:
 
@@ -91,16 +152,53 @@ npm start
 
 The application will be available at `http://localhost:4200` (or `http://localhost:8100` with Ionic CLI). The app will automatically reload when you make changes to the source files.
 
-## ⚙️ Configuration
+---
 
-### Environment Settings
+## ⚡ Non-Secure Deployment
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/strucio/movie-draft-pick.git
+cd movie-draft-pick
+```
+
+### 2. Install dependencies
+
+Reads package.json, calculates versions, updates the lockfile if needed.
+
+```bash
+npm install # ❌ Risky in Prod. (Can silently install a different version than you tested).
+```
+
+### 3. Running the Application
+
+To start the development server:
+
+````bash
+# Using Ionic CLI (recommended)
+ionic serve
+
+# Or using npm
+npm start
+
+```bash
+git clone https://github.com/strucio/movie-draft-pick.git
+cd movie-draft-pick
+````
+
+---
+
+## Configuration
+
+### Environment files
 
 The application uses environment-specific configuration files located in `./src/environments/`:
 
 - `environment.ts` - Development environment settings
 - `environment.prod.ts` - Production environment settings
 
-#### Key Configuration Options
+### Important options
 
 Edit `./src/environments/environment.ts` to modify:
 
@@ -109,6 +207,7 @@ export const environment = {
     production: false,
     backendUrl: 'http://localhost:3000', // Web Scraper API URL
     tmdbToken: 'your-tmdb-api-token-here', // The Movie Database API token
+    iam: {...}, // iam ednpoints (sign-up, loging etc.)
 };
 ```
 
@@ -120,19 +219,9 @@ export const environment = {
 
 #### Backend Service Options
 
-This app requires a backend service to scrape Letterboxd movie lists. You have two options:
+This app requires a backend service to scrape Letterboxd movie lists.
 
-##### Option 1: Local Backend (Default - Recommended for Development)
-
-```typescript
-backendUrl: 'http://localhost:3000';
-```
-
-- **Pros**: Much faster, better for testing and development
-- **Cons**: Requires setting up the web scraper service locally
-- **Default**: This is the default configuration when you run `ionic serve` or `npm start`
-
-##### Option 2: Cloud Backend (Manual Configuration Required)
+##### Cloud Backend (Manual Configuration Required)
 
 To use the cloud backend, you need to manually edit `./src/environments/environment.ts`:
 
@@ -144,18 +233,7 @@ To use the cloud backend, you need to manually edit `./src/environments/environm
 backendUrl: 'https://letterboxd-list-scraper-lcoj.onrender.com';
 ```
 
-- **Pros**: No backend service setup required on your machine
-- **Cons**: Significantly slower due to cloud hosting limitations
-- **Setup**: Requires manually switching the URLs in the environment file
-
-### Getting a TMDb API Token
-
-1. Create an account at [themoviedb.org](https://www.themoviedb.org/)
-2. Go to Settings → API
-3. Request an API key
-4. Copy the "API Read Access Token" to the `tmdbToken` field in your environment file
-
-## 🏗️ Project Structure
+## 🏗️ Architecture & project layout
 
 This is an **Angular** application using the **Ionic** framework:
 
@@ -173,3 +251,17 @@ src/
 ├── environments/         # Configuration files
 └── theme/                # Styling and CSS variables
 ```
+
+### Recommended Learning Resources
+
+- [OWASP Top 10 (2021)](https://owasp.org/www-project-top-ten/)
+- [Node.js Security Handbook](https://www.nodejs-security-handbook.com/)
+- [Angular Security Guide](https://angular.io/guide/security)
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
