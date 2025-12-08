@@ -16,8 +16,7 @@ export const environment = {
         changePasswordUrl: `${BASE_IAM_URL}/changePassword/`,
         verifyListUrl: `${BASE_IAM_URL}/fetchsecure/`,
     },
-    tmdbToken:
-        'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNjY1MGIwZDZlOTI1ZjRmMmMwMTIxNGEyNWVmYmUzZSIsIm5iZiI6MTcyOTkwMjY0MS4wNSwic3ViIjoiNjcxYzM4MzEzNGMwZmFiZDY4MWM5YWI4Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.hXaRUY4CRiEbsCbCSIUCKWdA7WDsWMFlIr9A6yTnA8o',
+    tmdbToken: '',
 };
 
 /*

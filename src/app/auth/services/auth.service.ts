@@ -166,7 +166,7 @@ export class AuthService {
     onAuthStateChange(callback: (session: UserSession | null) => void) {
         this.authState$.subscribe(callback);
     }
-    ///////////////////////////////////////// SESSION STORAGE HELPERS
+    ///////////////////////////////////////// SECURE SESSION STORAGE HELPERS (A04:2021) token persist only durin session. ////////////////////////////////
     saveToSessionStorage(token: string) {
         sessionStorage.setItem('sessionData', token);
     }

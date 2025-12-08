@@ -120,7 +120,7 @@ npm audit
 npm audit fix #Automatically updates minor versions to patch holes.
 ```
 
-update what you need/prefer based on audit and security scans
+update what you need/prefer based on audit and outdated scans
 
 ```bash
 npm update <dependency>
@@ -134,9 +134,8 @@ Secure. (Clean Install). Fails if lockfile and package.json disagree.
 npm ci --ignore-scripts # Reads only package-lock.json. Deletes node_modules first. Verifies Hashes.
 ```
 
-1. INTEGRITY: Use 'npm ci' (Clean Install) instead of 'npm install'
-2. SECURITY: Prevent malicious post-install scripts
-    - Preventing Script Injection (A08) -> ignore-scripts flag
+1. **Enforces IntegrityY**: ´npm ci´ provides a deterministic install by reading only the lockfile, verifying package hashes, and failing if package.json disagrees.
+2. **Blocks Malicious Scripts**: The ´--ignore-scripts´ flag prevents the execution of lifecycle scripts during installation, mitigating the risk of script injection attacks (OWASP A08).
 
 ### 5. Running the Application
 
@@ -145,9 +144,6 @@ To start the development server:
 ```bash
 # Using Ionic CLI (recommended)
 ionic serve
-
-# Or using npm
-npm start
 ```
 
 The application will be available at `http://localhost:4200` (or `http://localhost:8100` with Ionic CLI). The app will automatically reload when you make changes to the source files.
@@ -175,17 +171,10 @@ npm install # ❌ Risky in Prod. (Can silently install a different version than 
 
 To start the development server:
 
-````bash
+```bash
 # Using Ionic CLI (recommended)
 ionic serve
-
-# Or using npm
-npm start
-
-```bash
-git clone https://github.com/strucio/movie-draft-pick.git
-cd movie-draft-pick
-````
+```
 
 ---
 
@@ -265,3 +254,7 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+
+```

@@ -130,7 +130,7 @@ export class SignUpPage {
         this.credentials = this.secure_form;
     }
 
-    //SECURE: check the quality of password and given user inputs
+    //SECURE: constrain the quality of password and validate inputs given (A07:2021, A03:2021)
     secure_form = this.formBuilder.nonNullable.group(
         {
             email: [
